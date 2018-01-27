@@ -3,6 +3,7 @@ package multimedia;
 import java.io.*;
 
 class Main {
+
 	public static void main(String[] args) throws FileNotFoundException, IOException {
 		if (args.length != 1) {
 			System.out.println("Call the program with exactly one argument!");
@@ -10,6 +11,6 @@ class Main {
 			System.exit(-1);
 		}
 		Map map = new Map(args[0]);
-		map.print();
+		// map.print();
 	}
 }

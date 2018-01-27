@@ -1,0 +1,1 @@
+java -cp . multimedia.Main examples/world_default.txt

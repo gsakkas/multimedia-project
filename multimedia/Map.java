@@ -10,6 +10,7 @@ public class Map {
 	public Map(String InputFile) throws FileNotFoundException, IOException {
 		this.Grid = new int[DimX][DimY];
 		ReadMap(InputFile);
+		MapFrame frame = new MapFrame(DimX, DimY, this.Grid);
 	}
 
 	private void ReadMap(String InputFile) throws FileNotFoundException, IOException {

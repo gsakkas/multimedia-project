@@ -1,16 +1,17 @@
 package multimedia;
 
 import java.io.*;
+import java.util.ArrayList;
 
 public class Map {
 	private static int DimX = 30;
 	private static int DimY = 60;
 	private int Grid[][];
 
-	public Map(String InputFile) throws FileNotFoundException, IOException {
+	public Map(String InputFile, ArrayList<Airports> airports) throws FileNotFoundException, IOException {
 		this.Grid = new int[DimX][DimY];
 		ReadMap(InputFile);
-		MapFrame frame = new MapFrame(DimX, DimY, this.Grid);
+		MapFrame frame = new MapFrame(DimX, DimY, this.Grid, airports);
 	}
 
 	private void ReadMap(String InputFile) throws FileNotFoundException, IOException {

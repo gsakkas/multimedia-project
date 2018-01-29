@@ -2,8 +2,11 @@ JFLAGS =
 JC = /usr/lib/jvm/default-java/bin/javac
 MYPATH = ./multimedia/
 CLASSES = \
-		MapFrame.java \
+		Flights.java \
+		Airports.java \
+		MapPanel.java \
 		Map.java \
+		MainWindow.java \
 		Main.java 
 
 all: compile

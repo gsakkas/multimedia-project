@@ -10,16 +10,13 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.util.ArrayList;
 
-public class MapFrame extends JFrame {
+public class MapPanel extends JPanel {
 
-	public MapFrame(int DimX, int DimY, int[][] Grid, ArrayList<Airports> airports) {
-		super("Multimedia flight simulator");
+	public MapPanel(int DimX, int DimY, int[][] Grid, ArrayList<Airports> airports) {
+		super(new GridLayout(DimX, DimY));
 		super.setSize(DimY * 16, DimX * 16);
 		JPanel[][] PanelHolder = new JPanel[DimX][DimY];
-		// super.setLocationRelativeTo(null);
-		// super.setLayout();
 
-		JPanel mainPanel = new JPanel(new GridLayout(DimX, DimY));
 		for (int i = 0; i < DimX; i++) {
 			for (int j = 0; j < DimY; j++) {
 				int temp = Grid[i][j];
@@ -41,7 +38,7 @@ public class MapFrame extends JFrame {
 					PanelHolder[i][j] = this.createSquareJPanel(new Color(60,179,113), 16);
 				else if (temp == 0)
 					PanelHolder[i][j] = this.createSquareJPanel(new Color(0,0,255), 16);
-				mainPanel.add(PanelHolder[i][j]);
+				this.add(PanelHolder[i][j]);
 			}
 		}
 
@@ -52,14 +49,7 @@ public class MapFrame extends JFrame {
 			PanelHolder[airport.getX()][airport.getY()].add(airport.getImg());
 		}
 		
-		mainPanel.setOpaque(true);
-		JPanel totalGUI = new JPanel();
-		totalGUI.add(mainPanel);
-		totalGUI.setOpaque(true);
-		super.setContentPane(totalGUI);
-		super.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		super.pack();
-		super.setVisible(true);
+		this.setOpaque(true);
 	}
 
 	// In this method, we create a square JPanel of a colour and set size

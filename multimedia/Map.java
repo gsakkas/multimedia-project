@@ -8,10 +8,9 @@ public class Map {
 	private static int DimY = 60;
 	private int Grid[][];
 
-	public Map(String InputFile, ArrayList<Airports> airports) throws FileNotFoundException, IOException {
+	public Map(String InputFile) throws FileNotFoundException, IOException {
 		this.Grid = new int[DimX][DimY];
 		ReadMap(InputFile);
-		MapFrame frame = new MapFrame(DimX, DimY, this.Grid, airports);
 	}
 
 	private void ReadMap(String InputFile) throws FileNotFoundException, IOException {
@@ -54,5 +53,17 @@ public class Map {
 			}
 			System.out.println("");
 		}
+	}
+
+	public int getDimX() {
+		return this.DimX;
+	}
+
+	public int getDimY() {
+		return this.DimY;
+	}
+
+	public int[][] getGrid() {
+		return this.Grid;
 	}
 }

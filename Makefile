@@ -2,6 +2,8 @@ JFLAGS =
 JC = /usr/lib/jvm/default-java/bin/javac
 MYPATH = ./multimedia/
 CLASSES = \
+		TextAreaPanel.java \
+		InfoBarPanel.java \
 		Flights.java \
 		Airports.java \
 		MapPanel.java \

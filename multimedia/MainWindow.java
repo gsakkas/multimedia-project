@@ -6,15 +6,15 @@ import javax.swing.JSplitPane;
 import java.util.ArrayList;
 
 public class MainWindow extends JFrame {
-	private JPanel mapPanel;
-	private JPanel infoBarPanel;
-	private JPanel textAreaPanel;
+	private MapPanel mapPanel;
+	private InfoBarPanel infoBarPanel;
+	private TextAreaPanel textAreaPanel;
 
 	public MainWindow(Map map, ArrayList<Airports> airports, ArrayList<Flights> flights){
 		super("MediaLab Flight Simulation");
-		MapPanel mapPanel = new MapPanel(map.getDimX(), map.getDimY(), map.getGrid(), airports);
-		InfoBarPanel infoBarPanel = new InfoBarPanel();
-		TextAreaPanel textAreaPanel = new TextAreaPanel();
+		mapPanel = new MapPanel(map.getDimX(), map.getDimY(), map.getGrid(), airports);
+		infoBarPanel = new InfoBarPanel();
+		textAreaPanel = new TextAreaPanel();
 
 		JSplitPane mainAreaSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, mapPanel, textAreaPanel);
 		mainAreaSplitPane.setDividerSize(0);
@@ -29,4 +29,7 @@ public class MainWindow extends JFrame {
 		super.setVisible(true);
 	}
 	
+	public MapPanel getMap() {
+		return mapPanel;
+	}
 }

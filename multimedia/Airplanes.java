@@ -9,7 +9,7 @@ public class Airplanes {
 	private int RateUpDown;
 	private int Type;
 
-	public void Airplanes(int sud, int ms, int mfc, int fc, int mh, int rud, int type) {
+	public Airplanes(int sud, int ms, int mfc, int fc, int mh, int rud, int type) {
 		this.SpeedUpDown = sud;
 		this.MaxSpeed = ms;
 		this.MaxFuelCapacity = mfc;

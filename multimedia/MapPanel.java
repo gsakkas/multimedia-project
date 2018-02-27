@@ -1,12 +1,15 @@
 package multimedia;
 
 import javax.swing.JPanel;
+import javax.swing.JLabel;
+import javax.swing.ImageIcon;
 import java.awt.GridLayout;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.util.ArrayList;
+import java.lang.Thread;
 
 public class MapPanel extends JPanel {
 	private JPanel PanelHolder[][];
@@ -59,5 +62,25 @@ public class MapPanel extends JPanel {
 		tempPanel.setMaximumSize(new Dimension(size, size));
 		tempPanel.setPreferredSize(new Dimension(size, size));
 		return tempPanel;
+	}
+
+	public void simulateFlight(ArrayList<int[]> path) {
+		int[] first = path.get(0);
+		JLabel img = new JLabel(new ImageIcon("./SimulationIcons/small_w.png"));
+		PanelHolder[first[0]][first[1]].add(img);
+		JPanel previous = PanelHolder[first[0]][first[1]];
+		revalidate();
+		repaint();
+
+		try{Thread.sleep(500);} catch(InterruptedException e){System.out.println(e);}
+		for (int[] node : path) {
+			previous.remove(img);
+			img = new JLabel(new ImageIcon("./SimulationIcons/small_w.png"));
+			PanelHolder[node[0]][node[1]].add(img);
+			previous = PanelHolder[node[0]][node[1]];
+			revalidate();
+			repaint();
+			try{Thread.sleep(500);} catch(InterruptedException e){System.out.println(e);}
+		}
 	}
 }

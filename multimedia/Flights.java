@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Queue;
+import javax.swing.JLabel;
 
 public class Flights {
 	private int FlightID;
@@ -17,6 +18,12 @@ public class Flights {
 	private int FlightSpeed;
 	private int FlightHeight;
 	private int	FlightFuels;
+	private int TimeToNextBlock;
+	private ArrayList<int[]> Path;
+	private int Counter;
+	private int[] PreviousPanel;
+	private JLabel ImageToDelete;
+	private boolean FinishedSim;
 
 	public Flights(int fid, int fst, int at, int al, String fn, Airplanes atype, int fs, int fh, int ff) {
 		this.FlightID = fid;
@@ -28,6 +35,12 @@ public class Flights {
 		this.FlightSpeed = fs;
 		this.FlightHeight = fh;
 		this.FlightFuels = ff;
+		this.TimeToNextBlock = 10*5*60*20/this.FlightSpeed;
+		this.Counter = 0;
+		this.Path = null;
+		this.PreviousPanel = null;
+		this.ImageToDelete = null;
+		this.FinishedSim = false;
 	}
 
 	static public void ReadFlights(String InputFile, ArrayList<Flights> list) throws FileNotFoundException, IOException {
@@ -201,8 +214,52 @@ public class Flights {
 		return path;
 	}
 	
-	
-	public int getSpeed() {
-		return this.FlightSpeed;
+	public int getTime() {
+		return this.TimeToNextBlock;
+	}
+
+	public void setPath(ArrayList<int[]> p) {
+		this.Path = p;
+	}
+
+	public int[] removeFromPath() {
+		return this.Path.remove(0);
+	}
+
+	public boolean checkPath() {
+		return this.Path.isEmpty();
+	}
+
+	public boolean updateCounter(int time) {
+		this.Counter += time;
+		if (this.Counter >= this.TimeToNextBlock) {
+			this.Counter -= this.TimeToNextBlock;
+			return true;
+		}
+		else return false;
+	}
+
+	public int[] getPreviousPanel() {
+		return this.PreviousPanel;
+	}
+
+	public void setPreviousPanel(int[] pp) {
+		this.PreviousPanel = pp;
+	}
+
+	public JLabel getImage() {
+		return this.ImageToDelete;
+	}
+
+	public void setImage(JLabel img) {
+		this.ImageToDelete = img;
+	}
+
+	public void finishSim() {
+		this.FinishedSim = true;
+	}
+
+	public boolean SimStatus() {
+		return this.FinishedSim;
 	}
 }

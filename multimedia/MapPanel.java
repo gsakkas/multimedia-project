@@ -64,23 +64,28 @@ public class MapPanel extends JPanel {
 		return tempPanel;
 	}
 
-	public void simulateFlight(ArrayList<int[]> path) {
-		int[] first = path.get(0);
-		JLabel img = new JLabel(new ImageIcon("./SimulationIcons/small_w.png"));
-		PanelHolder[first[0]][first[1]].add(img);
-		JPanel previous = PanelHolder[first[0]][first[1]];
+	public void moveToNextPanel(Flights fl) {
+		int[] node = null;
+		JLabel img1 = fl.getImage();
+		JLabel img2 = new JLabel(new ImageIcon("./SimulationIcons/small_w.png"));
+		JPanel previous = null;
+		boolean flag = !fl.checkPath();
+		if (img1 != null) {
+			node = fl.getPreviousPanel();
+			previous = PanelHolder[node[0]][node[1]];
+			previous.remove(img1);
+		}
+		if (flag) {
+			node = fl.removeFromPath();
+			PanelHolder[node[0]][node[1]].add(img2);
+			fl.setPreviousPanel(node);
+			fl.setImage(img2);
+		}
+		else fl.finishSim();
+	}
+
+	public void redraw() {
 		revalidate();
 		repaint();
-
-		try{Thread.sleep(500);} catch(InterruptedException e){System.out.println(e);}
-		for (int[] node : path) {
-			previous.remove(img);
-			img = new JLabel(new ImageIcon("./SimulationIcons/small_w.png"));
-			PanelHolder[node[0]][node[1]].add(img);
-			previous = PanelHolder[node[0]][node[1]];
-			revalidate();
-			repaint();
-			try{Thread.sleep(500);} catch(InterruptedException e){System.out.println(e);}
-		}
 	}
 }

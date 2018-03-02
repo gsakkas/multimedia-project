@@ -37,6 +37,11 @@ public class MainWindow extends JFrame {
 		return mapPanel;
 	}
 
+	public void setSimStatus(boolean b) {
+		if (b) menuBarPanel.enableSim();
+		else menuBarPanel.disableSim();
+	}
+
 	public boolean simRunning() {
 		return menuBarPanel.getStatus();
 	}
@@ -45,8 +50,12 @@ public class MainWindow extends JFrame {
 		infoBarPanel.setTime(t);
 	}
 
-	public void setAircrafts(int airc) {
-		infoBarPanel.setAircrafts(airc);
+	public void addAircraft(int airc) {
+		infoBarPanel.addAircraft(airc);
+	}
+
+	public void removeAircraft(int airc) {
+		infoBarPanel.removeAircraft(airc);
 	}
 
 	public void setCrashes(int c) {
@@ -55,5 +64,9 @@ public class MainWindow extends JFrame {
 
 	public void setLandings(int l) {
 		infoBarPanel.setLandings(l);
+	}
+
+	public void resetVars() {
+		infoBarPanel.resetVars();
 	}
 }

@@ -19,11 +19,14 @@ public class Flights {
 	private int FlightHeight;
 	private int	FlightFuels;
 	private int TimeToNextBlock;
+
+	// Helper variables
 	private ArrayList<int[]> Path;
 	private int Counter;
 	private int[] PreviousPanel;
 	private JLabel ImageToDelete;
 	private boolean FinishedSim;
+	private boolean removedFromInfoBar;
 
 	public Flights(int fid, int fst, int at, int al, String fn, Airplanes atype, int fs, int fh, int ff) {
 		this.FlightID = fid;
@@ -41,6 +44,7 @@ public class Flights {
 		this.PreviousPanel = null;
 		this.ImageToDelete = null;
 		this.FinishedSim = false;
+		this.removedFromInfoBar = false;
 	}
 
 	static public void ReadFlights(String InputFile, ArrayList<Flights> list) throws FileNotFoundException, IOException {
@@ -255,11 +259,28 @@ public class Flights {
 		this.ImageToDelete = img;
 	}
 
+	public boolean getRemoved() {
+		return this.removedFromInfoBar;
+	}
+
+	public void setRemoved() {
+		this.removedFromInfoBar = !this.removedFromInfoBar;
+	}
+
 	public void finishSim() {
 		this.FinishedSim = true;
 	}
 
 	public boolean SimStatus() {
 		return this.FinishedSim;
+	}
+
+	public void resetVars() {
+		this.Counter = 0;
+		this.Path = null;
+		this.PreviousPanel = null;
+		this.ImageToDelete = null;
+		this.FinishedSim = false;
+		this.removedFromInfoBar = false;
 	}
 }

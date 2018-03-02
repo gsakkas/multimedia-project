@@ -33,7 +33,7 @@ public class MenuBarPanel extends JPanel {
 		gameMenu.add(startItem);
 		ActionListener startSim = new ActionListener() {
 				public void actionPerformed(ActionEvent e) { 
-					simStatus = true;
+					enableSim();
 				}
 			};
 		startItem.addActionListener(startSim);
@@ -41,9 +41,10 @@ public class MenuBarPanel extends JPanel {
 		gameMenu.add(stopItem);
 		ActionListener stopSim = new ActionListener() {
 				public void actionPerformed(ActionEvent e) { 
-					simStatus = false;
+					disableSim();
 				}
 			};
+		stopItem.addActionListener(stopSim);
 		gameMenu.add(new JMenuItem("Load"));
 		JMenuItem exitItem = new JMenuItem("Exit");
 		gameMenu.add(exitItem);
@@ -61,6 +62,14 @@ public class MenuBarPanel extends JPanel {
 		simMenu.add(new JMenuItem("Flights"));
 
 		this.setOpaque(true);
+	}
+
+	public void enableSim() {
+		simStatus = true;
+	}
+
+	public void disableSim() {
+		simStatus = false;
 	}
 
 	public boolean getStatus() {

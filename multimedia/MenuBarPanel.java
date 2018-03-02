@@ -14,8 +14,14 @@ public class MenuBarPanel extends JPanel {
 	private JMenu gameMenu;
 	private JMenu simMenu;
 
+	// Simulation helping variables
+	private boolean simStatus;
+
 	public MenuBarPanel(){
 		super(new FlowLayout(FlowLayout.LEADING));
+
+		// Initializing helping variables
+		simStatus = false;
 
 		menuBar = new JMenuBar();
 		this.add(menuBar);
@@ -26,18 +32,26 @@ public class MenuBarPanel extends JPanel {
 		JMenuItem startItem = new JMenuItem("Start");
 		gameMenu.add(startItem);
 		ActionListener startSim = new ActionListener() {
-				public void actionPerformed(ActionEvent ev) { 
-					System.exit(0);
+				public void actionPerformed(ActionEvent e) { 
+					simStatus = true;
 				}
 			};
 		startItem.addActionListener(startSim);
-		gameMenu.add(new JMenuItem("Stop"));
+		JMenuItem stopItem = new JMenuItem("Stop");
+		gameMenu.add(stopItem);
+		ActionListener stopSim = new ActionListener() {
+				public void actionPerformed(ActionEvent e) { 
+					simStatus = false;
+				}
+			};
 		gameMenu.add(new JMenuItem("Load"));
 		JMenuItem exitItem = new JMenuItem("Exit");
 		gameMenu.add(exitItem);
 		exitItem.addActionListener(
 			new ActionListener() {
-				public void actionPerformed(ActionEvent ev) { System.exit(0); }
+				public void actionPerformed(ActionEvent e) {
+					System.exit(0);
+				}
 		});
 
 		simMenu = new JMenu("Simulation");
@@ -47,5 +61,9 @@ public class MenuBarPanel extends JPanel {
 		simMenu.add(new JMenuItem("Flights"));
 
 		this.setOpaque(true);
+	}
+
+	public boolean getStatus() {
+		return simStatus;
 	}
 }

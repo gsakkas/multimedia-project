@@ -36,4 +36,24 @@ public class MainWindow extends JFrame {
 	public MapPanel getMap() {
 		return mapPanel;
 	}
+
+	public boolean simRunning() {
+		return menuBarPanel.getStatus();
+	}
+
+	public void setTime(int t) {
+		infoBarPanel.setTime(t);
+	}
+
+	public void setAircrafts(int airc) {
+		infoBarPanel.setAircrafts(airc);
+	}
+
+	public void setCrashes(int c) {
+		infoBarPanel.setCrashes(c);
+	}
+
+	public void setLandings(int l) {
+		infoBarPanel.setLandings(l);
+	}
 }

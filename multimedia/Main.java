@@ -20,21 +20,42 @@ class Main {
 		Map map = new Map(args[0]);
 		MainWindow frame = new MainWindow(map, airports, flights);
 		MapPanel mapP = frame.getMap();
+		while (true){
+			System.out.println("Main Loop!");
+			if (frame.simRunning()) {
+				simulateFlights(frame, flights, airports, mapP, map.getGrid());
+			}
+		}
+	}
+
+	public static void simulateFlights(
+		MainWindow frame, ArrayList<Flights> flights,
+		ArrayList<Airports> airports, MapPanel mapP, int[][] grid) {
+		
 		ArrayList<Integer> times = new ArrayList<Integer>();
 		ArrayList<ArrayList<int[]>> list = new ArrayList<ArrayList<int[]>>();
 		for (Flights flight : flights) {
-			ArrayList<int[]> path = flight.PathFind(airports, map.getGrid());
+			ArrayList<int[]> path = flight.PathFind(airports, grid);
 			flight.setPath(path);
 			times.add(flight.getTime());
 		}
-		int SleepTime = gcd(times.stream().mapToInt(i -> i).toArray());
+		int SleepTime = 1000;
+		// int SleepTime = gcd(times.stream().mapToInt(i -> i).toArray());
 		boolean allFlightsFinished = false;
-		while (!allFlightsFinished){
+		while (!allFlightsFinished && frame.simRunning()){
 			sleep(SleepTime);
+			frame.setTime(SleepTime/1000);
 			allFlightsFinished = true;
 			for (Flights flight : flights) {
 				if (flight.updateCounter(SleepTime)) mapP.moveToNextPanel(flight);
 				allFlightsFinished = flight.SimStatus();
+			}
+			mapP.redraw();
+		}
+
+		if (!frame.simRunning()) {
+			for (Flights flight : flights) {
+				mapP.clearImg(flight);
 			}
 			mapP.redraw();
 		}

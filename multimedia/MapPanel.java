@@ -84,6 +84,14 @@ public class MapPanel extends JPanel {
 		else fl.finishSim();
 	}
 
+	public void clearImg(Flights fl) {
+		if (fl.getImage() != null) {
+			int[] node = fl.getPreviousPanel();
+			JPanel previous = PanelHolder[node[0]][node[1]];
+			previous.remove(fl.getImage());
+		}
+	}
+
 	public void redraw() {
 		revalidate();
 		repaint();

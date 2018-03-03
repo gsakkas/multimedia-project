@@ -8,22 +8,18 @@ public class Map {
 	private static int DimY = 60;
 	private int Grid[][];
 
-	public Map(String InputFile) throws FileNotFoundException, IOException {
+	public Map(String InputFile) throws IOException {
 		this.Grid = new int[DimX][DimY];
 		ReadMap(InputFile);
 	}
 
-	private void ReadMap(String InputFile) throws FileNotFoundException, IOException {
+	private void ReadMap(String InputFile) throws IOException {
 		BufferedReader br = null;
 		try {
 			br = new BufferedReader(new FileReader(InputFile));
 		}
 		catch (FileNotFoundException e) {
-			System.out.println(InputFile + "not found!");
-			System.exit(-1);
-		}
-		catch (IOException e) {
-			e.printStackTrace();
+			System.out.println(InputFile + " not found!");
 			System.exit(-1);
 		}
 

@@ -47,17 +47,13 @@ public class Flights {
 		this.removedFromInfoBar = false;
 	}
 
-	static public void ReadFlights(String InputFile, ArrayList<Flights> list) throws FileNotFoundException, IOException {
+	static public void ReadFlights(String InputFile, ArrayList<Flights> list) throws IOException {
 		BufferedReader br = null;
 		try {
 			br = new BufferedReader(new FileReader(InputFile));
 		}
 		catch (FileNotFoundException e) {
 			System.out.println(InputFile + " not found!");
-			System.exit(-1);
-		}
-		catch (IOException e) {
-			e.printStackTrace();
 			System.exit(-1);
 		}
 

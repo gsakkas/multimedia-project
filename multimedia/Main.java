@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 class Main {
 
-	public static void main(String[] args) throws FileNotFoundException, IOException {
+	public static void main(String[] args) throws IOException {
 		if (args.length != 3) {
 			System.out.println("Call the program with exactly one argument!");
 			System.out.println("argument 1: path to map file");
@@ -14,10 +14,10 @@ class Main {
 			System.exit(-1);
 		}
 		ArrayList<Airports> airports = new ArrayList<Airports>();
-		Airports.ReadAirports(args[1], airports);
 		ArrayList<Flights> flights = new ArrayList<Flights>();
-		Flights.ReadFlights(args[2], flights);
 		Map map = new Map(args[0]);
+		Airports.ReadAirports(args[1], airports);
+		Flights.ReadFlights(args[2], flights);
 		MainWindow frame = new MainWindow(map, airports, flights);
 		MapPanel mapP = frame.getMap();
 		while (true){
@@ -25,6 +25,18 @@ class Main {
 			if (frame.simRunning()) {
 				frame.resetVars();
 				simulateFlights(frame, flights, airports, mapP, map.getGrid());
+			}
+			if (frame.getLoadedStatus()) {
+				frame.unloadFile();
+
+				airports = new ArrayList<Airports>();
+				flights = new ArrayList<Flights>();
+				map = new Map(frame.getWorldFile());
+				Airports.ReadAirports(frame.getAirportsFile(), airports);
+				Flights.ReadFlights(frame.getFlightsFile(), flights);
+				frame.setMap(map, airports);
+				sleep(1);
+				mapP = frame.getMap();
 			}
 		}
 	}
@@ -44,7 +56,7 @@ class Main {
 		int SleepTime = 1000;
 		// int SleepTime = gcd(times.stream().mapToInt(i -> i).toArray());
 		boolean allFlightsFinished = false;
-		while (!allFlightsFinished && frame.simRunning()){
+		while (!allFlightsFinished && frame.simRunning() && !frame.getLoadedStatus()){
 			sleep(SleepTime/2);
 			frame.setTime(SleepTime);
 			allFlightsFinished = true;
@@ -60,7 +72,7 @@ class Main {
 			mapP.redraw();
 		}
 
-		if (!frame.simRunning()) {
+		if (!frame.simRunning() || frame.getLoadedStatus()) {
 			for (Flights flight : flights) {
 				mapP.clearImg(flight);
 			}

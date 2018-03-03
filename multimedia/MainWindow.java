@@ -10,6 +10,9 @@ public class MainWindow extends JFrame {
 	private InfoBarPanel infoBarPanel;
 	private TextAreaPanel textAreaPanel;
 	private MenuBarPanel menuBarPanel;
+	private JSplitPane mainAreaSplitPane;
+	private JSplitPane topBarSplitPane;
+	private JSplitPane barMainAreaSplitPane;
 
 	public MainWindow(Map map, ArrayList<Airports> airports, ArrayList<Flights> flights){
 		super("MediaLab Flight Simulation");
@@ -18,11 +21,13 @@ public class MainWindow extends JFrame {
 		textAreaPanel = new TextAreaPanel();
 		menuBarPanel = new MenuBarPanel();
 
-		JSplitPane mainAreaSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, mapPanel, textAreaPanel);
+		mainAreaSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, mapPanel, textAreaPanel);
 		mainAreaSplitPane.setDividerSize(0);
-		JSplitPane topBarSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, menuBarPanel, infoBarPanel);
+		
+		topBarSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, menuBarPanel, infoBarPanel);
 		topBarSplitPane.setDividerSize(0);
-		JSplitPane barMainAreaSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, topBarSplitPane, mainAreaSplitPane);
+		
+		barMainAreaSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, topBarSplitPane, mainAreaSplitPane);
 		barMainAreaSplitPane.setDividerSize(0);
 		
 		super.setContentPane(barMainAreaSplitPane);
@@ -37,6 +42,13 @@ public class MainWindow extends JFrame {
 		return mapPanel;
 	}
 
+	public void setMap(Map map, ArrayList<Airports> airports) {
+		mapPanel = new MapPanel(map.getDimX(), map.getDimY(), map.getGrid(), airports);
+
+		mainAreaSplitPane.setLeftComponent(mapPanel);
+		mainAreaSplitPane.updateUI();
+	}
+
 	public void setSimStatus(boolean b) {
 		if (b) menuBarPanel.enableSim();
 		else menuBarPanel.disableSim();
@@ -44,6 +56,10 @@ public class MainWindow extends JFrame {
 
 	public boolean simRunning() {
 		return menuBarPanel.getStatus();
+	}
+
+	public boolean getLoadedStatus() {
+		return menuBarPanel.getLoadedStatus();
 	}
 
 	public void setTime(int t) {
@@ -68,5 +84,21 @@ public class MainWindow extends JFrame {
 
 	public void resetVars() {
 		infoBarPanel.resetVars();
+	}
+
+	public void unloadFile() {
+		menuBarPanel.unloadFile();
+	}
+
+	public String getWorldFile() {
+		return menuBarPanel.getWorldFile();
+	}
+
+	public String getAirportsFile() {
+		return menuBarPanel.getAirportsFile();
+	}
+
+	public String getFlightsFile() {
+		return menuBarPanel.getFlightsFile();
 	}
 }

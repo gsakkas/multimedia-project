@@ -58,6 +58,10 @@ public class MainWindow extends JFrame {
 		return menuBarPanel.getStatus();
 	}
 
+	public boolean simRestart() {
+		return menuBarPanel.getStatusWhileRunning();
+	}
+
 	public boolean getLoadedStatus() {
 		return menuBarPanel.getLoadedStatus();
 	}

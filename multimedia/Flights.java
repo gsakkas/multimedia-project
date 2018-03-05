@@ -29,6 +29,7 @@ public class Flights {
 	private boolean removedFromInfoBar;
 	private int Fuels;
 	private int FuelCons;
+	private int TimeToStart;
 
 	public Flights(int fid, int fst, int at, int al, String fn, Airplanes atype, int fs, int fh, int ff) {
 		this.FlightID = fid;
@@ -49,9 +50,12 @@ public class Flights {
 		this.removedFromInfoBar = false;
 		this.Fuels = this.FlightFuels;
 		this.FuelCons = atype.getFuelConsumption();
+		this.TimeToStart = fst * 5000;
 	}
 
-	static public void ReadFlights(String InputFile, ArrayList<Flights> list) throws IOException {
+	static public void ReadFlights(String InputFile, 
+		ArrayList<Flights> list, ArrayList<Airports> airports) throws IOException {
+		
 		BufferedReader br = null;
 		try {
 			br = new BufferedReader(new FileReader(InputFile));
@@ -81,7 +85,8 @@ public class Flights {
 			int fs = Integer.parseInt(values[6]);
 			int fh = Integer.parseInt(values[7]);
 			int ff = Integer.parseInt(values[8]);
-			list.add(new Flights(fid, fst, at, al, fn, atype, fs, fh, ff));
+			Flights temp = new Flights(fid, fst, at, al, fn, atype, fs, fh, ff);
+			if (temp.checkFlight(airports)) list.add(temp);
 		}
 		br.close();
 	}
@@ -239,17 +244,80 @@ public class Flights {
 	}
 
 	public boolean updateCounter(int time) {
-		this.Counter += time;
-		if (this.Counter >= this.TimeToNextBlock) {
-			this.Counter -= this.TimeToNextBlock;
-			return true;
+		if (this.TimeToStart > 0) {
+			this.TimeToStart -= time;
 		}
-		else return false;
+		if (this.TimeToStart <= 0) {
+			this.Counter += time;
+			if (this.Counter >= this.TimeToNextBlock) {
+				this.Counter -= this.TimeToNextBlock;
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public boolean updateFuels() {
-		Fuels -= FuelCons*20;
-		return (Fuels < 0);
+		boolean noFuels = (Fuels - FuelCons*20 < 0);
+		if (Fuels - FuelCons*20 >= 0)
+			Fuels -= FuelCons*20;
+		else
+			Fuels = 0;
+		return noFuels;
+	}
+
+	public boolean checkFlight(ArrayList<Airports> airports) {
+		boolean check = true;
+		boolean check1 = false;
+		
+		for (Airports airport : airports) {
+			if (airport.getID() == AirportTakeOff) {
+				if (airport.getCategory() == 1)
+					check1 = (airport.getState() && (AirplaneType.getType() == 1));
+				else if (airport.getCategory() == 2)
+					check1 = (airport.getState() && (AirplaneType.getType() > 1));
+				else
+					check1 = airport.getState();
+			}
+		}
+		
+		if (!check1) {
+			check = false;
+			System.out.println("Take off Airport not found!");
+		}
+		
+		check1 = false;
+		for (Airports airport : airports) {
+			if (airport.getID() == AirportLanding) {
+				if (airport.getCategory() == 1)
+					check1 = (airport.getState() && (AirplaneType.getType() == 1));
+				else if (airport.getCategory() == 2)
+					check1 = (airport.getState() && (AirplaneType.getType() > 1));
+				else
+					check1 = airport.getState();
+			}
+		}
+		
+		if (!check1) {
+			check = false;
+			System.out.print("Landing Airport not found!");
+		}
+
+		if (FlightSpeed > AirplaneType.getMaxSpeed()) {
+			check = false;
+			System.out.println("Not valid flight speed!");
+		}
+		
+		if (FlightHeight > AirplaneType.getMaxHeight()) {
+			check = false;
+			System.out.println("Not valid flight height!");
+		}
+		
+		if (FlightFuels > AirplaneType.getMaxFuelCapacity()) {
+			check = false;
+			System.out.println("Not valid flight fuels!");
+		}
+		return check;
 	}
 
 	public int[] getPreviousPanel() {
@@ -303,6 +371,27 @@ public class Flights {
 				"\n   -Flight Status: " + "Running\n";
 	}
 
+	public String showAircraftInfo(ArrayList<Airports> airports) {
+		String takeOffAirportName = "NONE";
+		String landingAirportName = "NONE";
+		for (Airports airport : airports) {
+			if (airport.getID() == AirportTakeOff) {
+				takeOffAirportName = airport.getName();
+			}
+			if (airport.getID() == AirportLanding) {
+				landingAirportName = airport.getName();
+			}
+		}
+		
+		return "Aircraft " + FlightID + ": " + 
+				"\n   -Take Off Airport: " + takeOffAirportName + 
+				"\n   -Landing Airport: " + landingAirportName +
+				"\n   -Flight Speed: " + FlightSpeed +
+				"\n   -Flight Height: " + FlightHeight +
+				"\n   -Flight Fuels: " + Fuels +
+				"\n";
+	}
+
 	public void resetVars() {
 		this.Counter = 0;
 		this.Path = null;
@@ -311,5 +400,6 @@ public class Flights {
 		this.FinishedSim = false;
 		this.removedFromInfoBar = false;
 		this.Fuels = this.FlightFuels;
+		this.TimeToStart = this.FlightStart * 5000;
 	}
 }

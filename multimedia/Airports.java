@@ -91,6 +91,14 @@ class Airports {
 	public String getName() {
 		return this.Name;
 	}
+
+	public boolean getState() {
+		return this.Open;
+	}
+	
+	public int getCategory() {
+		return this.Category;
+	}
 	
 	public String showAirportInfo() {
 		return "Airport " + ID + ": " + Name + ", " + Category + ", " + Open + ", " + Direction + "\n";

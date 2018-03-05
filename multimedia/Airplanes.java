@@ -22,6 +22,18 @@ public class Airplanes {
 	public int getType() {
 		return Type;
 	}
+
+	public int getMaxSpeed() {
+		return this.MaxSpeed;
+	}
+	
+	public int getMaxHeight() {
+		return this.MaxHeight;
+	}
+	
+	public int getMaxFuelCapacity() {
+		return this.MaxFuelCapacity;
+	}
 	
 	public int getFuelConsumption() {
 		return this.FuelConsumption;

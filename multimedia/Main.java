@@ -17,7 +17,7 @@ class Main {
 		ArrayList<Flights> flights = new ArrayList<Flights>();
 		Map map = new Map(args[0]);
 		Airports.ReadAirports(args[1], airports);
-		Flights.ReadFlights(args[2], flights);
+		Flights.ReadFlights(args[2], flights, airports);
 		MainWindow frame = new MainWindow(map, airports, flights);
 		MapPanel mapP = frame.getMap();
 		while (true){
@@ -27,6 +27,10 @@ class Main {
 				frame.addText("Simulation Started!");
 				simulateFlights(frame, flights, airports, mapP, map.getGrid());
 				frame.addText("Simulation Ended!");
+				if (frame.simRestart()) {
+					frame.setSimStatus(false);
+					frame.setSimStatus(true);
+				}
 			}
 			if (frame.getLoadedStatus()) {
 				frame.unloadFile();
@@ -35,7 +39,7 @@ class Main {
 				flights = new ArrayList<Flights>();
 				map = new Map(frame.getWorldFile());
 				Airports.ReadAirports(frame.getAirportsFile(), airports);
-				Flights.ReadFlights(frame.getFlightsFile(), flights);
+				Flights.ReadFlights(frame.getFlightsFile(), flights, airports);
 				frame.setMap(map, airports);
 				sleep(1);
 				mapP = frame.getMap();
@@ -55,10 +59,10 @@ class Main {
 			flight.setPath(path);
 			times.add(flight.getTime());
 		}
+
 		int SleepTime = 1000;
-		// int SleepTime = gcd(times.stream().mapToInt(i -> i).toArray());
 		boolean allFlightsFinished = false;
-		while (!allFlightsFinished && frame.simRunning() && !frame.getLoadedStatus()){
+		while (!allFlightsFinished && frame.simRunning() && !frame.getLoadedStatus() && !frame.simRestart()){
 			sleep(SleepTime/2);
 			frame.setTime(SleepTime);
 			allFlightsFinished = true;
@@ -87,7 +91,7 @@ class Main {
 			mapP.redraw();
 		}
 
-		if (!frame.simRunning() || frame.getLoadedStatus()) {
+		if (!frame.simRunning() || frame.getLoadedStatus() || frame.simRestart()) {
 			for (Flights flight : flights) {
 				mapP.clearImg(flight);
 			}
@@ -104,32 +108,5 @@ class Main {
 
 	public static void sleep(int st) {
 		try{Thread.sleep(st);} catch(InterruptedException e){System.out.println(e);}		
-	}
-	
-	public static int gcd(int[] numbers) {
-		int gcd = 1;
-		int index = 2;
-		if (numbers.length == 1) {
-			gcd = numbers[0];
-		}
-		if (numbers.length > 1) {
-			gcd = euclidGcd(numbers[0], numbers[1]); 
-		}
-		while (index < numbers.length) {
-			gcd = euclidGcd(gcd, numbers[index]);
-			index++;
-		}
-		return gcd;
-	}
-	
-	public static int euclidGcd(int num1, int num2){
-		int temp = 0;
-		while (num2 != 0) {
-			temp = num2;
-			num2 = num1 % num2;
-			num1 = temp;
-		}
-		num1 = (num1 < 0) ? -num1 : num1;
-		return num1;
 	}
 }

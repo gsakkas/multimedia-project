@@ -19,6 +19,7 @@ public class MenuBarPanel extends JPanel {
 
 	// Simulation helping variables
 	private boolean simStatus;
+	private boolean simStatusIfRunning;
 	private MenuBarPanel self;
 	private String world_file;
 	private String airports_file;
@@ -31,6 +32,7 @@ public class MenuBarPanel extends JPanel {
 
 		// Initializing helping variables
 		simStatus = false;
+		simStatusIfRunning = false;
 		self = this;
 		loaded = false;
 
@@ -125,7 +127,11 @@ public class MenuBarPanel extends JPanel {
 		simMenu.add(aircraftsItem);
 		ActionListener aircraftsInfo = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-//				showAircraftsInfo();
+				String msg = "";
+				for (Flights flight : flights) {
+					msg += flight.showAircraftInfo(airports);
+				}
+				JOptionPane.showMessageDialog(self, msg);
 			}
 		};
 		aircraftsItem.addActionListener(aircraftsInfo);
@@ -147,15 +153,23 @@ public class MenuBarPanel extends JPanel {
 	}
 
 	public void enableSim() {
-		simStatus = true;
+		if (!simStatus)
+			simStatus = true;
+		else
+			simStatusIfRunning = true;
 	}
 
 	public void disableSim() {
 		simStatus = false;
+		simStatusIfRunning = false;
 	}
 
 	public boolean getStatus() {
 		return simStatus;
+	}
+
+	public boolean getStatusWhileRunning() {
+		return simStatusIfRunning;
 	}
 
 	public void loadedFile() {

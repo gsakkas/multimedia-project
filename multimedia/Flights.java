@@ -27,6 +27,8 @@ public class Flights {
 	private JLabel ImageToDelete;
 	private boolean FinishedSim;
 	private boolean removedFromInfoBar;
+	private int Fuels;
+	private int FuelCons;
 
 	public Flights(int fid, int fst, int at, int al, String fn, Airplanes atype, int fs, int fh, int ff) {
 		this.FlightID = fid;
@@ -45,6 +47,8 @@ public class Flights {
 		this.ImageToDelete = null;
 		this.FinishedSim = false;
 		this.removedFromInfoBar = false;
+		this.Fuels = this.FlightFuels;
+		this.FuelCons = atype.getFuelConsumption();
 	}
 
 	static public void ReadFlights(String InputFile, ArrayList<Flights> list) throws IOException {
@@ -67,11 +71,11 @@ public class Flights {
 			String fn = values[4];
 			Airplanes atype = null;
 			if (values[5].equals("1"))
-				atype = new Airplanes(60, 110, 280, 8000, 700, 3, 1);
+				atype = new Airplanes(1, 60, 110, 280, 8000, 700, 3);
 			else if (values[5].equals("2"))
-				atype = new Airplanes(100, 220, 4200, 16000, 1200, 9, 2);
+				atype = new Airplanes(2, 100, 220, 4200, 16000, 1200, 9);
 			else if (values[5].equals("3"))
-				atype = new Airplanes(140, 280, 16000, 28000, 2300, 15, 3);
+				atype = new Airplanes(3, 140, 280, 16000, 28000, 2300, 15);
 			else
 				throw new IllegalArgumentException("Not valid airplane type!");
 			int fs = Integer.parseInt(values[6]);
@@ -218,6 +222,10 @@ public class Flights {
 		return this.TimeToNextBlock;
 	}
 
+	public int getHeight() {
+		return this.FlightHeight;
+	}
+
 	public void setPath(ArrayList<int[]> p) {
 		this.Path = p;
 	}
@@ -237,6 +245,11 @@ public class Flights {
 			return true;
 		}
 		else return false;
+	}
+
+	public boolean updateFuels() {
+		Fuels -= FuelCons*20;
+		return (Fuels < 0);
 	}
 
 	public int[] getPreviousPanel() {
@@ -271,6 +284,25 @@ public class Flights {
 		return this.FinishedSim;
 	}
 
+	public String showFlightInfo(ArrayList<Airports> airports) {
+		String takeOffAirportName = "NONE";
+		String landingAirportName = "NONE";
+		for (Airports airport : airports) {
+			if (airport.getID() == AirportTakeOff) {
+				takeOffAirportName = airport.getName();
+			}
+			if (airport.getID() == AirportLanding) {
+				landingAirportName = airport.getName();
+			}
+		}
+		
+		return "Flight " + FlightID + ": " + 
+				"\n   -Take Off Airport: " + takeOffAirportName + 
+				"\n   -Landing Airport: " + landingAirportName +
+				"\n   -Airplane Type: " + AirplaneType.getType() +
+				"\n   -Flight Status: " + "Running\n";
+	}
+
 	public void resetVars() {
 		this.Counter = 0;
 		this.Path = null;
@@ -278,5 +310,6 @@ public class Flights {
 		this.ImageToDelete = null;
 		this.FinishedSim = false;
 		this.removedFromInfoBar = false;
+		this.Fuels = this.FlightFuels;
 	}
 }

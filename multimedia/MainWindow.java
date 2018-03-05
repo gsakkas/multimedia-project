@@ -19,7 +19,7 @@ public class MainWindow extends JFrame {
 		mapPanel = new MapPanel(map.getDimX(), map.getDimY(), map.getGrid(), airports);
 		infoBarPanel = new InfoBarPanel();
 		textAreaPanel = new TextAreaPanel();
-		menuBarPanel = new MenuBarPanel();
+		menuBarPanel = new MenuBarPanel(airports, flights);
 
 		mainAreaSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, mapPanel, textAreaPanel);
 		mainAreaSplitPane.setDividerSize(0);
@@ -100,5 +100,9 @@ public class MainWindow extends JFrame {
 
 	public String getFlightsFile() {
 		return menuBarPanel.getFlightsFile();
+	}
+
+	public void addText(String text) {
+		textAreaPanel.addText(text);
 	}
 }

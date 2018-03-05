@@ -12,7 +12,6 @@ public class TextAreaPanel extends JLabel {
 		addText("Map created!");
 		addText("Reading all input files...");
 		addText("Read all input files!");
-		addText("Starting simulation...");
 		setOpaque(true);
 	}
 

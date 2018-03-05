@@ -24,7 +24,9 @@ class Main {
 			sleep(1);
 			if (frame.simRunning()) {
 				frame.resetVars();
+				frame.addText("Simulation Started!");
 				simulateFlights(frame, flights, airports, mapP, map.getGrid());
+				frame.addText("Simulation Ended!");
 			}
 			if (frame.getLoadedStatus()) {
 				frame.unloadFile();
@@ -61,12 +63,25 @@ class Main {
 			frame.setTime(SleepTime);
 			allFlightsFinished = true;
 			for (Flights flight : flights) {
-				if (flight.updateCounter(SleepTime)) mapP.moveToNextPanel(flight);
+				if (flight.updateCounter(SleepTime)) {
+					mapP.moveToNextPanel(flight);
+					if (flight.updateFuels()) flight.setPath(new ArrayList<int[]>());
+				}
 				allFlightsFinished = flight.SimStatus();
 				if (flight.SimStatus() && !flight.getRemoved()) {
 					frame.removeAircraft(1);
-					frame.setLandings(1);
+					if (flight.updateFuels())
+						frame.setCrashes(1);
+					else
+						frame.setLandings(1);
 					flight.setRemoved();
+				}
+				for (Flights fl : flights) {
+					if (flight != fl && Math.abs(flight.getHeight() - fl.getHeight()) < 500
+						&& flight.getPreviousPanel() == fl.getPreviousPanel()) {
+						flight.setPath(new ArrayList<int[]>());
+						fl.setPath(new ArrayList<int[]>());
+					}
 				}
 			}
 			mapP.redraw();

@@ -10,6 +10,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import java.io.File;
+import java.util.ArrayList;
 
 public class MenuBarPanel extends JPanel {
 	private JMenuBar menuBar;
@@ -25,7 +26,7 @@ public class MenuBarPanel extends JPanel {
 	private boolean loaded;
 						
 
-	public MenuBarPanel(){
+	public MenuBarPanel(ArrayList<Airports> airports, ArrayList<Flights> flights){
 		super(new FlowLayout(FlowLayout.LEADING));
 
 		// Initializing helping variables
@@ -35,7 +36,8 @@ public class MenuBarPanel extends JPanel {
 
 		menuBar = new JMenuBar();
 		this.add(menuBar);
-
+		
+		// Game Menu
 		gameMenu = new JMenu("Game");
 		menuBar.add(gameMenu);
 		
@@ -101,12 +103,45 @@ public class MenuBarPanel extends JPanel {
 				}
 			};
 		exitItem.addActionListener(exitProg);
-
+		
+		// Simulation Menu
 		simMenu = new JMenu("Simulation");
 		menuBar.add(simMenu);
-		simMenu.add(new JMenuItem("Airports"));
-		simMenu.add(new JMenuItem("Aircrafts"));
-		simMenu.add(new JMenuItem("Flights"));
+		
+		JMenuItem airportsItem = new JMenuItem("Airports");
+		simMenu.add(airportsItem);
+		ActionListener airportsInfo = new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String msg = "";
+				for (Airports airport : airports) {
+					msg += airport.showAirportInfo();
+				}
+				JOptionPane.showMessageDialog(self, msg);
+			}
+		};
+		airportsItem.addActionListener(airportsInfo);
+	
+		JMenuItem aircraftsItem = new JMenuItem("Aircrafts");
+		simMenu.add(aircraftsItem);
+		ActionListener aircraftsInfo = new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+//				showAircraftsInfo();
+			}
+		};
+		aircraftsItem.addActionListener(aircraftsInfo);
+		
+		JMenuItem flightsItem = new JMenuItem("Flights");
+		simMenu.add(flightsItem);
+		ActionListener flightstsInfo = new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String msg = "";
+				for (Flights flight : flights) {
+					msg += flight.showFlightInfo(airports);
+				}
+				JOptionPane.showMessageDialog(self, msg);
+			}
+		};
+		flightsItem.addActionListener(flightstsInfo);
 
 		this.setOpaque(true);
 	}

@@ -9,13 +9,21 @@ public class Airplanes {
 	private int RateUpDown;
 	private int Type;
 
-	public Airplanes(int sud, int ms, int mfc, int fc, int mh, int rud, int type) {
+	public Airplanes(int type, int sud, int ms, int mfc, int mh, int rud, int fc) {
+		this.Type = type;
 		this.SpeedUpDown = sud;
 		this.MaxSpeed = ms;
 		this.MaxFuelCapacity = mfc;
-		this.FuelConsumption = fc;
 		this.MaxHeight = mh;
 		this.RateUpDown = rud;
-		this.Type = type;
+		this.FuelConsumption = fc;
+	}
+	
+	public int getType() {
+		return Type;
+	}
+	
+	public int getFuelConsumption() {
+		return this.FuelConsumption;
 	}
 }

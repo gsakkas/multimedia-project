@@ -62,7 +62,7 @@ class Airports {
 			else if (values[4].equals("3")) dir = "S";
 			else if (values[4].equals("4")) dir = "W";
 			int cat = Integer.parseInt(values[5]);
-			boolean open = (values[6] == "1");
+			boolean open = (values[6].equals("1"));
 			list.add(new Airports(id, cx, cy, name, cat, open, dir));
 		}
 		br.close();
@@ -86,6 +86,14 @@ class Airports {
 
 	public int getdY() {
 		return this.diadY;
+	}
+
+	public String getName() {
+		return this.Name;
+	}
+	
+	public String showAirportInfo() {
+		return "Airport " + ID + ": " + Name + ", " + Category + ", " + Open + ", " + Direction + "\n";
 	}
 
 	public JLabel getImg() {

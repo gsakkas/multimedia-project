@@ -44,7 +44,7 @@ public class MainWindow extends JFrame {
 
 	public void setMap(Map map, ArrayList<Airports> airports) {
 		mapPanel = new MapPanel(map.getDimX(), map.getDimY(), map.getGrid(), airports);
-
+		try{Thread.sleep(2);} catch(InterruptedException e){System.out.println(e);}		
 		mainAreaSplitPane.setLeftComponent(mapPanel);
 		mainAreaSplitPane.updateUI();
 	}

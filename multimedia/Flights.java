@@ -30,6 +30,8 @@ public class Flights {
 	private int Fuels;
 	private int FuelCons;
 	private int TimeToStart;
+	private int quants;
+	private int MaxQuants;
 
 	public Flights(int fid, int fst, int at, int al, String fn, Airplanes atype, int fs, int fh, int ff) {
 		this.FlightID = fid;
@@ -41,7 +43,7 @@ public class Flights {
 		this.FlightSpeed = fs;
 		this.FlightHeight = fh;
 		this.FlightFuels = ff;
-		this.TimeToNextBlock = 10*5*60*20/this.FlightSpeed;
+		this.TimeToNextBlock = 100*5*60*20/this.FlightSpeed;
 		this.Counter = 0;
 		this.Path = null;
 		this.PreviousPanel = null;
@@ -51,6 +53,7 @@ public class Flights {
 		this.Fuels = this.FlightFuels;
 		this.FuelCons = atype.getFuelConsumption();
 		this.TimeToStart = fst * 5000;
+		this.quants = 0;
 	}
 
 	static public void ReadFlights(String InputFile, 
@@ -243,6 +246,29 @@ public class Flights {
 		return this.Path.remove(0);
 	}
 
+	public int[] checkFirstInPath() {
+		return this.Path.get(0);
+	}
+
+	public void updateQuants() {
+		if (this.quants + 1 >= this.MaxQuants)
+			this.quants = 0;
+		else
+			this.quants++;
+	}
+
+	public int getQuants() {
+		return this.quants;
+	}
+
+	public void setMaxQuants(int time) {
+		this.MaxQuants = this.TimeToNextBlock / time;
+	}
+
+	public int getMaxQuants() {
+		return this.MaxQuants;
+	}
+
 	public boolean checkPath() {
 		return this.Path.isEmpty();
 	}
@@ -252,22 +278,36 @@ public class Flights {
 			this.TimeToStart -= time;
 		}
 		if (this.TimeToStart <= 0) {
-			this.Counter += time;
-			if (this.Counter >= this.TimeToNextBlock) {
-				this.Counter -= this.TimeToNextBlock;
+			if (this.Counter == 0) {
+				this.Counter += time;
+				if (this.Counter >= this.TimeToNextBlock) {
+					this.Counter = 0;
+				}
 				return true;
+			}
+			else {
+				this.Counter += time;
+				if (this.Counter >= this.TimeToNextBlock) {
+					this.Counter = 0;
+				}
+				return false;
 			}
 		}
 		return false;
 	}
 
 	public boolean updateFuels() {
-		boolean noFuels = (Fuels - FuelCons*20 < 0);
-		if (Fuels - FuelCons*20 >= 0)
-			Fuels -= FuelCons*20;
+		if (TimeToStart <= 0) {
+			int posothta = FuelCons*20 / MaxQuants;
+			boolean noFuels = (Fuels - posothta < 0);
+			if (Fuels - posothta >= 0)
+				Fuels -= posothta;
+			else
+				Fuels = 0;
+			return noFuels;
+		}
 		else
-			Fuels = 0;
-		return noFuels;
+			return false;
 	}
 
 	public boolean checkFlight(ArrayList<Airports> airports) {
@@ -405,5 +445,6 @@ public class Flights {
 		this.removedFromInfoBar = false;
 		this.Fuels = this.FlightFuels;
 		this.TimeToStart = this.FlightStart * 5000;
+		this.quants = 0;
 	}
 }

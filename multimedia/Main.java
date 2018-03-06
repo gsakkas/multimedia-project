@@ -59,7 +59,9 @@ class Main {
 		ArrayList<Integer> times = new ArrayList<Integer>();
 		ArrayList<ArrayList<int[]>> list = new ArrayList<ArrayList<int[]>>();
 		frame.addText("Finding paths for Flights...");
+		int SleepTime = 100;
 		for (Flights flight : flights) {
+			flight.setMaxQuants(SleepTime);
 			frame.addAircraft(1);
 			ArrayList<int[]> path = flight.PathFind(airports, grid);
 			flight.setPath(path);
@@ -67,15 +69,23 @@ class Main {
 		}
 		frame.addText("Found paths for Flights");
 
-		int SleepTime = 1000;
+		int quant = 1000 / SleepTime;
 		boolean allFlightsFinished = false;
+		int count = 0;
 		while (!allFlightsFinished && frame.simRunning() && !frame.getLoadedStatus() && !frame.simRestart()){
 			sleep(SleepTime);
-			frame.setTime(SleepTime);
+			if (count == quant) {
+				frame.setTime(1000);
+				count = 0;
+			}
 			allFlightsFinished = true;
 			for (Flights flight : flights) {
 				if (flight.updateCounter(SleepTime)) {
 					mapP.moveToNextPanel(flight);
+					if (flight.updateFuels()) flight.setPath(new ArrayList<int[]>());
+				}
+				else {
+					mapP.moveToNextPanelSlightly(flight);
 					if (flight.updateFuels()) flight.setPath(new ArrayList<int[]>());
 				}
 				allFlightsFinished = flight.SimStatus();
@@ -100,6 +110,7 @@ class Main {
 				}
 			}
 			mapP.redraw();
+			count++;
 		}
 
 		if (!frame.simRunning() || frame.getLoadedStatus() || frame.simRestart()) {

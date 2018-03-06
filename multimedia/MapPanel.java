@@ -90,6 +90,7 @@ public class MapPanel extends JPanel {
 		if (img1 != null) {
 			node1 = fl.getPreviousPanel();
 			this.remove(img1);
+			fl.setFirstOrLast(false);
 		}
 		if (flag) {
 			node2 = fl.removeFromPath();
@@ -186,8 +187,8 @@ public class MapPanel extends JPanel {
 			setComponentZOrder(img2, getMin(node2) - 2);
 			int w = (size.width - 16) / 2;
 			int h = (size.height - 16) / 2;
-			int quantized_w = 16 * quants * (node2[1] - node1[1]) / fl.getMaxQuants();
-			int quantized_h = 16 * quants * (node2[0] - node1[0]) / fl.getMaxQuants();
+			int quantized_w = 16 * (quants + 1) * (node2[1] - node1[1]) / fl.getMaxQuants();
+			int quantized_h = 16 * (quants + 1) * (node2[0] - node1[0]) / fl.getMaxQuants();
 			img2.setBounds(node1[1] * 16 + quantized_w - w + insets.left, node1[0] * 16 + quantized_h - h + insets.top,
 				size.width, size.height);
 			// System.out.println("sl: " + (node1[1] * 16 + quantized_w - w + insets.left) + ", " + (node1[0] * 16 + quantized_h - h + insets.top));

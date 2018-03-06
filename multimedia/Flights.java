@@ -32,6 +32,8 @@ public class Flights {
 	private int TimeToStart;
 	private int quants;
 	private int MaxQuants;
+	private int TimeToFirstBlock;
+	private boolean firstOrLast;
 
 	public Flights(int fid, int fst, int at, int al, String fn, Airplanes atype, int fs, int fh, int ff) {
 		this.FlightID = fid;
@@ -44,6 +46,7 @@ public class Flights {
 		this.FlightHeight = fh;
 		this.FlightFuels = ff;
 		this.TimeToNextBlock = 100*5*60*20/this.FlightSpeed;
+		this.TimeToFirstBlock = 100*5*60*20/atype.getStartingSpeed();
 		this.Counter = 0;
 		this.Path = null;
 		this.PreviousPanel = null;
@@ -54,6 +57,7 @@ public class Flights {
 		this.FuelCons = atype.getFuelConsumption();
 		this.TimeToStart = fst * 5000;
 		this.quants = 0;
+		this.firstOrLast = true;
 	}
 
 	static public void ReadFlights(String InputFile, 
@@ -230,12 +234,24 @@ public class Flights {
 		return this.TimeToNextBlock;
 	}
 
+	public int getFirstTime() {
+		return this.TimeToFirstBlock;
+	}
+
 	public int getHeight() {
 		return this.FlightHeight;
 	}
 
 	public int getAirplaneType() {
 		return this.AirplaneType.getType();
+	}
+
+	public boolean getFirstOrLast() {
+		return this.firstOrLast;
+	}
+
+	public void setFirstOrLast(boolean t) {
+		this.firstOrLast = t;
 	}
 
 	public void setPath(ArrayList<int[]> p) {
@@ -262,7 +278,12 @@ public class Flights {
 	}
 
 	public void setMaxQuants(int time) {
-		this.MaxQuants = this.TimeToNextBlock / time;
+		if (this.firstOrLast || this.Path.size() == 1) {
+			this.MaxQuants = this.TimeToFirstBlock / time;
+		}
+		else {
+			this.MaxQuants = this.TimeToNextBlock / time;
+		}
 	}
 
 	public int getMaxQuants() {
@@ -278,19 +299,37 @@ public class Flights {
 			this.TimeToStart -= time;
 		}
 		if (this.TimeToStart <= 0) {
-			if (this.Counter == 0) {
-				this.Counter += time;
-				if (this.Counter >= this.TimeToNextBlock) {
-					this.Counter = 0;
+			if (this.firstOrLast) {
+				if (this.Counter == 0) {
+					this.Counter += time;
+					if (this.Counter >= this.TimeToNextBlock) {
+						this.Counter = 0;
+					}
+					return true;
 				}
-				return true;
+				else {
+					this.Counter += time;
+					if (this.Counter >= this.TimeToFirstBlock) {
+						this.Counter = 0;
+					}
+					return false;
+				}
 			}
 			else {
-				this.Counter += time;
-				if (this.Counter >= this.TimeToNextBlock) {
-					this.Counter = 0;
+				if (this.Counter == 0) {
+					this.Counter += time;
+					if (this.Counter >= this.TimeToNextBlock) {
+						this.Counter = 0;
+					}
+					return true;
 				}
-				return false;
+				else {
+					this.Counter += time;
+					if (this.Counter >= this.TimeToNextBlock) {
+						this.Counter = 0;
+					}
+					return false;
+				}
 			}
 		}
 		return false;
@@ -426,11 +465,11 @@ public class Flights {
 				landingAirportName = airport.getName();
 			}
 		}
-		
+		int fs = firstOrLast ? AirplaneType.getStartingSpeed() : FlightSpeed;
 		return "Aircraft " + FlightID + ": " + 
 				"\n   -Take Off Airport: " + takeOffAirportName + 
 				"\n   -Landing Airport: " + landingAirportName +
-				"\n   -Flight Speed: " + FlightSpeed +
+				"\n   -Flight Speed: " + fs +
 				"\n   -Flight Height: " + FlightHeight +
 				"\n   -Flight Fuels: " + Fuels +
 				"\n";

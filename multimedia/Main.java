@@ -80,9 +80,11 @@ class Main {
 			}
 			allFlightsFinished = true;
 			for (Flights flight : flights) {
+				// System.out.println(flight.getMaxQuants());
 				if (flight.updateCounter(SleepTime)) {
 					mapP.moveToNextPanel(flight);
 					if (flight.updateFuels()) flight.setPath(new ArrayList<int[]>());
+					flight.setMaxQuants(SleepTime);
 				}
 				else {
 					mapP.moveToNextPanelSlightly(flight);

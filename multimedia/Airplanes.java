@@ -23,6 +23,10 @@ public class Airplanes {
 		return Type;
 	}
 
+	public int getStartingSpeed() {
+		return this.SpeedUpDown;
+	}
+
 	public int getMaxSpeed() {
 		return this.MaxSpeed;
 	}

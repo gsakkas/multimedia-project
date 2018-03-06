@@ -8,6 +8,11 @@ public class Map {
 	private static int DimY = 60;
 	private int Grid[][];
 
+	/**
+	 * Returns an new Map object that reads from the given input file. 
+	 *
+	 * @param  InputFile 	the String name of the input file 
+	 */
 	public Map(String InputFile) throws IOException {
 		this.Grid = new int[DimX][DimY];
 		ReadMap(InputFile);
@@ -41,6 +46,10 @@ public class Map {
 		br.close();
 	}
 
+	/**
+	 * Just prints the grid of the Map object
+	 *
+	 */
 	public void print() {
 		for (int i = 0; i < DimX; i++) {
 			for (int j = 0; j < DimY; j++) {
@@ -51,14 +60,29 @@ public class Map {
 		}
 	}
 
+	/**
+	 * Just returns the dimension Y of the Map onbject. 
+	 *
+	 * @return the dimension X of the Map onbject
+	 */
 	public int getDimX() {
 		return this.DimX;
 	}
 
+	/**
+	 * Just returns the dimension Y of the Map onbject. 
+	 *
+	 * @return the dimension Y of the Map onbject
+	 */
 	public int getDimY() {
 		return this.DimY;
 	}
 
+	/**
+	 * Just returns the grid of the heights at each cell of the Map onbject. 
+	 *
+	 * @return the Grid with the heights of the Map onbject
+	 */
 	public int[][] getGrid() {
 		return this.Grid;
 	}

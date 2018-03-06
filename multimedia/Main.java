@@ -24,16 +24,21 @@ class Main {
 			sleep(1);
 			if (frame.simRunning()) {
 				frame.resetVars();
-				frame.addText("Simulation Started!");
+				frame.addText("Simulation Started");
 				simulateFlights(frame, flights, airports, mapP, map.getGrid());
-				frame.addText("Simulation Ended!");
+				frame.addText("Simulation Ended");
 				if (frame.simRestart()) {
 					frame.setSimStatus(false);
 					frame.setSimStatus(true);
 				}
 			}
 			if (frame.getLoadedStatus()) {
+				frame.addText("Loaded new files");
 				frame.unloadFile();
+				frame.addText("Reading all input files...");
+				frame.addText("Read default input files");
+				frame.addText("Map created!");
+		
 
 				airports = new ArrayList<Airports>();
 				flights = new ArrayList<Flights>();
@@ -53,17 +58,19 @@ class Main {
 		
 		ArrayList<Integer> times = new ArrayList<Integer>();
 		ArrayList<ArrayList<int[]>> list = new ArrayList<ArrayList<int[]>>();
+		frame.addText("Finding paths for Flights...");
 		for (Flights flight : flights) {
 			frame.addAircraft(1);
 			ArrayList<int[]> path = flight.PathFind(airports, grid);
 			flight.setPath(path);
 			times.add(flight.getTime());
 		}
+		frame.addText("Found paths for Flights");
 
 		int SleepTime = 1000;
 		boolean allFlightsFinished = false;
 		while (!allFlightsFinished && frame.simRunning() && !frame.getLoadedStatus() && !frame.simRestart()){
-			sleep(SleepTime/2);
+			sleep(SleepTime);
 			frame.setTime(SleepTime);
 			allFlightsFinished = true;
 			for (Flights flight : flights) {
@@ -74,10 +81,14 @@ class Main {
 				allFlightsFinished = flight.SimStatus();
 				if (flight.SimStatus() && !flight.getRemoved()) {
 					frame.removeAircraft(1);
-					if (flight.updateFuels())
+					if (flight.updateFuels()) {
+						frame.addText("One Flight crashed");
 						frame.setCrashes(1);
-					else
+					}
+					else {
+						frame.addText("One Flight finished normally");
 						frame.setLandings(1);
+					}
 					flight.setRemoved();
 				}
 				for (Flights fl : flights) {

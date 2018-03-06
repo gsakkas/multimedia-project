@@ -10,13 +10,18 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.util.ArrayList;
 import java.lang.Thread;
+import java.awt.Insets;
+import java.awt.Dimension;
+import java.lang.Math;
 
 public class MapPanel extends JPanel {
 	private JPanel PanelHolder[][];
+	private Insets insets;
 
 	public MapPanel(int DimX, int DimY, int[][] Grid, ArrayList<Airports> airports) {
-		super(new GridLayout(DimX, DimY));
-		super.setSize(DimY * 16, DimX * 16);
+		super(null);
+		insets = this.getInsets();
+		this.setPreferredSize(new Dimension(DimY * 16, DimX * 16));
 		PanelHolder = new JPanel[DimX][DimY];
 
 		for (int i = 0; i < DimX; i++) {
@@ -41,6 +46,9 @@ public class MapPanel extends JPanel {
 				else if (temp == 0)
 					PanelHolder[i][j] = createSquareJPanel(new Color(0,0,255), 16);
 				this.add(PanelHolder[i][j]);
+				Dimension size = PanelHolder[i][j].getPreferredSize();
+				PanelHolder[i][j].setBounds(j * 16 + insets.left, i * 16 + insets.top,
+					size.width, size.height);
 			}
 		}
 
@@ -50,13 +58,12 @@ public class MapPanel extends JPanel {
 			PanelHolder[airport.getX()][airport.getY()].add(airport.getImg(), c);
 		}
 		
-		this.setOpaque(true);
 	}
 
 	// In this method, we create a square JPanel of a colour and set size
 	// specified by the arguments.
 	private JPanel createSquareJPanel(Color color, int size) {
-		JPanel tempPanel = new JPanel(new GridBagLayout());
+		JPanel tempPanel = new JPanel();
 		tempPanel.setBackground(color);
 		tempPanel.setMinimumSize(new Dimension(size, size));
 		tempPanel.setMaximumSize(new Dimension(size, size));
@@ -65,30 +72,80 @@ public class MapPanel extends JPanel {
 	}
 
 	public void moveToNextPanel(Flights fl) {
-		int[] node = null;
+		int[] node1 = null;
+		int[] node2 = null;
 		JLabel img1 = fl.getImage();
-		JLabel img2 = new JLabel(new ImageIcon("./SimulationIcons/small_w.png"));
+		String icon = "./SimulationIcons/small_n.png";
+		if (fl.getAirplaneType() == 1) {
+			icon = "./SimulationIcons/small_n.png";
+		}
+		else if (fl.getAirplaneType() == 2) {
+			icon = "./SimulationIcons/middle_n.png";
+		}
+		else if (fl.getAirplaneType() == 3) {
+			icon = "./SimulationIcons/big_n.png";
+		}
+		JLabel img2 = new JLabel(new ImageIcon(icon));
 		JPanel previous = null;
 		boolean flag = !fl.checkPath();
 		if (img1 != null) {
-			node = fl.getPreviousPanel();
-			previous = PanelHolder[node[0]][node[1]];
-			previous.remove(img1);
+			node1 = fl.getPreviousPanel();
+			this.remove(img1);
 		}
 		if (flag) {
-			node = fl.removeFromPath();
-			PanelHolder[node[0]][node[1]].add(img2);
-			fl.setPreviousPanel(node);
+			node2 = fl.removeFromPath();
+			String direction = "n";
+			if (node1 != null) {
+				if (node2[0] - node1[0] < 0) {
+					direction = "n";
+				}
+				else if (node2[0] - node1[0] > 0) {
+					direction = "s";
+				}
+				else if (node2[1] - node1[1] < 0) {
+					direction = "w";
+				}
+				else{
+					direction = "e";
+				}
+			}
+			if (fl.getAirplaneType() == 1) {
+				icon = "./SimulationIcons/small_" + direction + ".png";
+			}
+			else if (fl.getAirplaneType() == 2) {
+				icon = "./SimulationIcons/middle_" + direction + ".png";
+			}
+			else if (fl.getAirplaneType() == 3) {
+				icon = "./SimulationIcons/big_" + direction + ".png";
+			}
+			img2 = new JLabel(new ImageIcon(icon));
+			this.add(img2);
+			Dimension size = img2.getPreferredSize();
+			System.out.println(getComponentZOrder(PanelHolder[node2[0]][node2[1]]));
+			System.out.println(getComponentZOrder(PanelHolder[node2[0]-1][node2[1]]));
+			System.out.println(getComponentZOrder(PanelHolder[node2[0]][node2[1]-1]));
+			setComponentZOrder(img2, getMin(node2) - 2);
+			System.out.println(getComponentZOrder(img2));
+			int w = (size.width - 16) / 2;
+			int h = (size.height - 16) / 2;
+			img2.setBounds(node2[1] * 16 + insets.left - w, node2[0] * 16 + insets.top - h,
+				size.width, size.height);
+			fl.setPreviousPanel(node2);
 			fl.setImage(img2);
 		}
 		else fl.finishSim();
 	}
 
+	private int getMin(int[] node) {
+		int center = getComponentZOrder(PanelHolder[node[0]][node[1]]);
+		int upper = node[0]-1 >= 0 ? getComponentZOrder(PanelHolder[node[0]-1][node[1]]) : center;
+		int left = node[1]-1 >= 0 ? getComponentZOrder(PanelHolder[node[0]][node[1]-1]) : center;
+		return Math.min(center, Math.min(upper, left));
+	}
+
 	public void clearImg(Flights fl) {
 		if (fl.getImage() != null) {
-			int[] node = fl.getPreviousPanel();
-			JPanel previous = PanelHolder[node[0]][node[1]];
-			previous.remove(fl.getImage());
+			this.remove(fl.getImage());
 		}
 	}
 

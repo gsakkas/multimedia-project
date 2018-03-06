@@ -231,6 +231,10 @@ public class Flights {
 		return this.FlightHeight;
 	}
 
+	public int getAirplaneType() {
+		return this.AirplaneType.getType();
+	}
+
 	public void setPath(ArrayList<int[]> p) {
 		this.Path = p;
 	}
@@ -300,7 +304,7 @@ public class Flights {
 		
 		if (!check1) {
 			check = false;
-			System.out.print("Landing Airport not found!");
+			System.out.println("Landing Airport not found!");
 		}
 
 		if (FlightSpeed > AirplaneType.getMaxSpeed()) {

@@ -69,7 +69,7 @@ public class MenuBarPanel extends JPanel {
 					boolean successfulFiles = true;
 					try {
 						mapid = Integer.parseInt(
-							JOptionPane.showInputDialog(self, "Type in the MAPID:", "Load File"));
+							JOptionPane.showInputDialog(self, "Type in the MAPID:", "Load File", JOptionPane.PLAIN_MESSAGE));
 						world_file = "examples/world_" + mapid + ".txt";
 						File f = new File(world_file);
 						if(!f.exists() || f.isDirectory()) { 

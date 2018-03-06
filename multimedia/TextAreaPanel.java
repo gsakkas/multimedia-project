@@ -9,9 +9,9 @@ public class TextAreaPanel extends JLabel {
 	public TextAreaPanel(){
 		super("<html>Creating map...");
 		setVerticalAlignment(SwingConstants.TOP);
-		addText("Map created!");
 		addText("Reading all input files...");
-		addText("Read all input files!");
+		addText("Read default input files");
+		addText("Map created!");
 		setOpaque(true);
 	}
 

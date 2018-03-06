@@ -15,10 +15,13 @@ CLASSES = \
 
 all: compile
 
+make_exec:
+	chmod +x run.bash
+
 compile:
-		$(JC) $(JFLAGS) $(addprefix $(MYPATH), $(CLASSES))
+	$(JC) $(JFLAGS) $(addprefix $(MYPATH), $(CLASSES))
 
 .PHONY: clean
 
 clean:
-		rm -f $(addprefix $(MYPATH), *.class)
+	rm -f $(addprefix $(MYPATH), *.class)
